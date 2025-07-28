@@ -12,7 +12,6 @@
   "dependencies": {
     "express": "^5.1.0",
     "@supabase/supabase-js": "^2.49.4",
-    "openai": "^5.3.0",
     "resend": "^4.5.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0"

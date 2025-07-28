@@ -16,7 +16,6 @@ Een moderne web applicatie gebouwd met React, Express, en Supabase.
 ### Backend
 - **Node.js + Express 5.1.0** - Server framework
 - **Supabase 2.49.4** - Database en authenticatie
-- **OpenAI 5.3.0** - AI/LLM integratie
 - **Resend 4.5.1** - Email service
 - **CORS 2.8.5** - Cross-origin requests
 - **Dotenv 16.5.0** - Environment variables

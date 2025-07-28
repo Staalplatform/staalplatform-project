@@ -7,7 +7,7 @@ interface ButtonProps {
   className?: string;
 }
 
-const Button = ({
+const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
   size = 'md',
@@ -16,12 +16,12 @@ const Button = ({
   className = '',
 }) => {
   const baseClasses = 'btn';
-  const variantClasses = {
+  const variantClasses: Record<string, string> = {
     primary: 'btn-primary',
     secondary: 'btn-secondary',
     outline: 'btn-outline',
   };
-  const sizeClasses = {
+  const sizeClasses: Record<string, string> = {
     sm: 'px-3 py-1.5 text-sm',
     md: 'px-4 py-2',
     lg: 'px-6 py-3 text-lg',
