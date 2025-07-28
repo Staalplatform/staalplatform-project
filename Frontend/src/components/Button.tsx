@@ -1,10 +1,12 @@
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'outline' | 'success' | 'danger' | 'warning';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   onClick?: () => void;
   disabled?: boolean;
   className?: string;
+  type?: 'button' | 'submit' | 'reset';
+  fullWidth?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,23 +16,31 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   disabled = false,
   className = '',
+  type = 'button',
+  fullWidth = false,
 }) => {
   const baseClasses = 'btn';
   const variantClasses: Record<string, string> = {
     primary: 'btn-primary',
     secondary: 'btn-secondary',
     outline: 'btn-outline',
+    success: 'btn-success',
+    danger: 'btn-danger',
+    warning: 'btn-warning',
   };
   const sizeClasses: Record<string, string> = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2',
-    lg: 'px-6 py-3 text-lg',
+    sm: 'btn-sm',
+    md: '',
+    lg: 'btn-lg',
+    xl: 'btn-xl',
   };
 
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  const widthClass = fullWidth ? 'w-full' : '';
+  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${widthClass} ${className}`.trim();
 
   return (
     <button
+      type={type}
       className={classes}
       onClick={onClick}
       disabled={disabled}

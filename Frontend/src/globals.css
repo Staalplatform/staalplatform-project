@@ -2,16 +2,514 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .btn {
-    @apply px-4 py-2 rounded-md font-semibold;
+/* ===== DESIGN SYSTEM - STAALPLATFORM ===== */
+
+/* Base styles */
+@layer base {
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
   }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-gray-900;
+  }
+  
+  h1 { @apply text-3xl md:text-4xl; }
+  h2 { @apply text-2xl md:text-3xl; }
+  h3 { @apply text-xl md:text-2xl; }
+  h4 { @apply text-lg md:text-xl; }
+  h5 { @apply text-base md:text-lg; }
+  h6 { @apply text-sm md:text-base; }
+}
+
+/* ===== KLEUREN PALET ===== */
+@layer components {
+  /* Primary kleuren - Staal/Blauw thema */
+  .color-primary-50 { @apply bg-blue-50; }
+  .color-primary-100 { @apply bg-blue-100; }
+  .color-primary-500 { @apply bg-blue-500; }
+  .color-primary-600 { @apply bg-blue-600; }
+  .color-primary-700 { @apply bg-blue-700; }
+  .color-primary-900 { @apply bg-blue-900; }
+  
+  .text-primary-50 { @apply text-blue-50; }
+  .text-primary-100 { @apply text-blue-100; }
+  .text-primary-500 { @apply text-blue-500; }
+  .text-primary-600 { @apply text-blue-600; }
+  .text-primary-700 { @apply text-blue-700; }
+  .text-primary-900 { @apply text-blue-900; }
+  
+  /* Secondary kleuren - Grijs/Staal */
+  .color-secondary-50 { @apply bg-gray-50; }
+  .color-secondary-100 { @apply bg-gray-100; }
+  .color-secondary-500 { @apply bg-gray-500; }
+  .color-secondary-600 { @apply bg-gray-600; }
+  .color-secondary-700 { @apply bg-gray-700; }
+  .color-secondary-900 { @apply bg-gray-900; }
+  
+  .text-secondary-50 { @apply text-gray-50; }
+  .text-secondary-100 { @apply text-gray-100; }
+  .text-secondary-500 { @apply text-gray-500; }
+  .text-secondary-600 { @apply text-gray-600; }
+  .text-secondary-700 { @apply text-gray-700; }
+  .text-secondary-900 { @apply text-gray-900; }
+  
+  /* Status kleuren */
+  .color-success { @apply bg-green-500; }
+  .color-warning { @apply bg-yellow-500; }
+  .color-danger { @apply bg-red-500; }
+  .color-info { @apply bg-blue-500; }
+  
+  .text-success { @apply text-green-600; }
+  .text-warning { @apply text-yellow-600; }
+  .text-danger { @apply text-red-600; }
+  .text-info { @apply text-blue-600; }
+}
+
+/* ===== KNOPPEN ===== */
+@layer components {
+  /* Basis knop stijl */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  /* Knop varianten */
   .btn-primary {
-    @apply bg-blue-600 text-white hover:bg-blue-700;
+    @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 shadow-sm;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500 bg-white;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 shadow-sm;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm;
+  }
+  
+  .btn-warning {
+    @apply bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500 shadow-sm;
+  }
+  
+  /* Knop groottes */
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+  
+  .btn-lg {
+    @apply px-6 py-3 text-base;
+  }
+  
+  .btn-xl {
+    @apply px-8 py-4 text-lg;
   }
 }
 
+/* ===== FORMULIEREN ===== */
+@layer components {
+  /* Form groep */
+  .form-group {
+    @apply mb-4;
+  }
+  
+  /* Labels */
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+  
+  .form-label-required::after {
+    content: " *";
+    @apply text-red-500;
+  }
+  
+  /* Input velden */
+  .form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors placeholder-gray-400;
+  }
+  
+  .form-input-error {
+    @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+  }
+  
+  /* Textarea */
+  .form-textarea {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-vertical min-h-[100px];
+  }
+  
+  /* Select dropdown */
+  .form-select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white;
+  }
+  
+  /* Checkbox en Radio */
+  .form-checkbox {
+    @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded;
+  }
+  
+  .form-radio {
+    @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300;
+  }
+  
+  /* Error berichten */
+  .form-error {
+    @apply mt-1 text-sm text-red-600;
+  }
+  
+  /* Help tekst */
+  .form-help {
+    @apply mt-1 text-sm text-gray-500;
+  }
+}
+
+/* ===== KAARTEN ===== */
+@layer components {
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden;
+  }
+  
+  .card-header {
+    @apply px-6 py-4 border-b border-gray-200 bg-gray-50;
+  }
+  
+  .card-body {
+    @apply px-6 py-4;
+  }
+  
+  .card-footer {
+    @apply px-6 py-4 border-t border-gray-200 bg-gray-50;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-md transition-shadow duration-200;
+  }
+  
+  .card-interactive {
+    @apply cursor-pointer hover:shadow-md hover:border-gray-300 transition-all duration-200;
+  }
+}
+
+/* ===== BADGES & LABELS ===== */
+@layer components {
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply bg-blue-100 text-blue-800;
+  }
+  
+  .badge-secondary {
+    @apply bg-gray-100 text-gray-800;
+  }
+  
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .badge-danger {
+    @apply bg-red-100 text-red-800;
+  }
+  
+  .badge-info {
+    @apply bg-blue-100 text-blue-800;
+  }
+  
+  /* Status badges */
+  .badge-status-open {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .badge-status-pending {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .badge-status-closed {
+    @apply bg-gray-100 text-gray-800;
+  }
+  
+  .badge-status-draft {
+    @apply bg-blue-100 text-blue-800;
+  }
+}
+
+/* ===== ALERTS & MELDINGEN ===== */
+@layer components {
+  .alert {
+    @apply p-4 rounded-lg border;
+  }
+  
+  .alert-info {
+    @apply bg-blue-50 border-blue-200 text-blue-800;
+  }
+  
+  .alert-success {
+    @apply bg-green-50 border-green-200 text-green-800;
+  }
+  
+  .alert-warning {
+    @apply bg-yellow-50 border-yellow-200 text-yellow-800;
+  }
+  
+  .alert-error {
+    @apply bg-red-50 border-red-200 text-red-800;
+  }
+  
+  .alert-dismissible {
+    @apply relative pr-12;
+  }
+  
+  .alert-close {
+    @apply absolute top-4 right-4 text-sm font-medium hover:opacity-75 transition-opacity cursor-pointer;
+  }
+}
+
+/* ===== TABELLEN ===== */
+@layer components {
+  .table {
+    @apply min-w-full divide-y divide-gray-200;
+  }
+  
+  .table-header {
+    @apply bg-gray-50;
+  }
+  
+  .table-header-cell {
+    @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+  }
+  
+  .table-body {
+    @apply bg-white divide-y divide-gray-200;
+  }
+  
+  .table-row {
+    @apply hover:bg-gray-50 transition-colors;
+  }
+  
+  .table-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+  }
+  
+  .table-cell-secondary {
+    @apply text-gray-500;
+  }
+}
+
+/* ===== NAVIGATIE ===== */
+@layer components {
+  .nav-link {
+    @apply px-3 py-2 rounded-md text-sm font-medium transition-colors;
+  }
+  
+  .nav-link-active {
+    @apply bg-blue-100 text-blue-700;
+  }
+  
+  .nav-link-inactive {
+    @apply text-gray-600 hover:text-gray-900 hover:bg-gray-100;
+  }
+  
+  .nav-link-mobile {
+    @apply block px-3 py-2 rounded-md text-base font-medium;
+  }
+}
+
+/* ===== LAYOUT COMPONENTEN ===== */
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-sm {
+    @apply max-w-3xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .page-header {
+    @apply bg-white shadow-sm border-b border-gray-200;
+  }
+  
+  .page-title {
+    @apply text-2xl font-bold text-gray-900;
+  }
+  
+  .page-subtitle {
+    @apply text-lg text-gray-600 mt-1;
+  }
+  
+  .section-header {
+    @apply mb-6;
+  }
+  
+  .section-title {
+    @apply text-xl font-semibold text-gray-900 mb-2;
+  }
+  
+  .section-description {
+    @apply text-gray-600;
+  }
+}
+
+/* ===== STATUS INDICATORS ===== */
+@layer components {
+  .status-dot {
+    @apply inline-block w-2 h-2 rounded-full mr-2;
+  }
+  
+  .status-dot-success {
+    @apply bg-green-400;
+  }
+  
+  .status-dot-warning {
+    @apply bg-yellow-400;
+  }
+  
+  .status-dot-danger {
+    @apply bg-red-400;
+  }
+  
+  .status-dot-info {
+    @apply bg-blue-400;
+  }
+  
+  .status-dot-gray {
+    @apply bg-gray-400;
+  }
+}
+
+/* ===== LOADING & ANIMATIES ===== */
+@layer components {
+  .loading-spinner {
+    @apply animate-spin rounded-full border-2 border-gray-300 border-t-blue-600;
+  }
+  
+  .loading-dots {
+    @apply inline-flex space-x-1;
+  }
+  
+  .loading-dot {
+    @apply w-2 h-2 bg-gray-400 rounded-full animate-pulse;
+  }
+  
+  .loading-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .loading-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+@layer components {
+  /* Text utilities */
+  .text-truncate {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Spacing utilities */
+  .space-y-6 > * + * {
+    @apply mt-6;
+  }
+  
+  .space-x-4 > * + * {
+    @apply ml-4;
+  }
+  
+  /* Interactive utilities */
+  .clickable {
+    @apply cursor-pointer hover:opacity-80 transition-opacity;
+  }
+  
+  .selectable {
+    @apply cursor-pointer hover:bg-gray-50 transition-colors;
+  }
+}
+
+/* ===== RESPONSIVE UTILITIES ===== */
+@layer components {
+  .responsive-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+  
+  .responsive-flex {
+    @apply flex flex-col md:flex-row;
+  }
+  
+  .responsive-text {
+    @apply text-sm md:text-base;
+  }
+  
+  .responsive-padding {
+    @apply p-4 md:p-6 lg:p-8;
+  }
+}
+
+/* ===== DARK MODE SUPPORT (voorbereiding) ===== */
+@media (prefers-color-scheme: dark) {
+  /* Dark mode styles kunnen hier later worden toegevoegd */
+}
+
+/* ===== CSS VARIABLES ===== */
 :root {
-  --primary-color: #2563eb;
-  --secondary-color: #1f2937;
+  /* Primary kleuren */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-900: #1e3a8a;
+  
+  /* Secondary kleuren */
+  --color-secondary-50: #f9fafb;
+  --color-secondary-100: #f3f4f6;
+  --color-secondary-500: #6b7280;
+  --color-secondary-600: #4b5563;
+  --color-secondary-700: #374151;
+  --color-secondary-900: #111827;
+  
+  /* Status kleuren */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
