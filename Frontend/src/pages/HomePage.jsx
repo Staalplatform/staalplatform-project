@@ -86,10 +86,10 @@ const HomePage = () => {
               {t('homepage.hero.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white text-blue-600 hover:bg-gray-100 focus:ring-blue-500 shadow-sm">
+              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 hover:shadow-md focus:ring-blue-500 shadow-sm transform hover:-translate-y-0.5">
                 {t('homepage.hero.cta')}
               </button>
-              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-white text-white hover:bg-white hover:text-blue-600 focus:ring-white">
+              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-white text-white hover:bg-white hover:text-blue-600 hover:shadow-lg focus:ring-white transform hover:-translate-y-0.5">
                 {t('homepage.hero.learnMore')}
               </button>
             </div>
@@ -168,10 +168,10 @@ const HomePage = () => {
               {t('homepage.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white text-blue-600 hover:bg-gray-100 focus:ring-blue-500 shadow-sm">
+              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white text-blue-600 hover:bg-blue-50 hover:text-blue-700 hover:shadow-md focus:ring-blue-500 shadow-sm transform hover:-translate-y-0.5">
                 {t('homepage.cta.register')}
               </button>
-              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-white text-white hover:bg-white hover:text-blue-600 focus:ring-white">
+              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-white text-white hover:bg-white hover:text-blue-600 hover:shadow-lg focus:ring-white transform hover:-translate-y-0.5">
                 {t('homepage.cta.contact')}
               </button>
             </div>
