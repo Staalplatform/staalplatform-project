@@ -44,6 +44,69 @@
     "published": "Veröffentlicht",
     "archived": "Archiviert"
   },
+  "homepage": {
+    "hero": {
+      "title": "Stahlplattform",
+      "subtitle": "Die intelligente Art, Stahl zu kaufen",
+      "description": "Unternehmen, die große Mengen Stahl einkaufen, tun dies oft über ihre bekannten Kanäle. Dies sind oft nicht die besten und günstigsten Kanäle, insbesondere wenn ein Käufer bei einem niederländischen Lieferanten bestellt.",
+      "cta": "Sparen Sie jetzt",
+      "learnMore": "Mehr erfahren"
+    },
+    "benefits": {
+      "title": "Warum unsere Plattform wählen?",
+      "subtitle": "Entdecken Sie die Vorteile der Stahlplattform",
+      "items": {
+        "lowerPrice": {
+          "title": "Geringerer Preis",
+          "description": "Sparen Sie erheblich bei Ihren Stahleinkäufen durch direkte Verbindungen zu internationalen Lieferanten"
+        },
+        "knowhow": {
+          "title": "Import-Know-how",
+          "description": "Unsere Expertise im internationalen Import sorgt für reibungslose Transaktionen und Compliance"
+        },
+        "certificates": {
+          "title": "Richtige Zertifikate",
+          "description": "Alle Lieferanten erfüllen die erforderlichen Zertifizierungen und Qualitätsstandards"
+        },
+        "quality": {
+          "title": "Gleichwertige Qualität",
+          "description": "Stahl von der gleichen hohen Qualität wie niederländische Lieferanten, aber zu besseren Preisen"
+        },
+        "delivery": {
+          "title": "Schnelle Lieferung",
+          "description": "Optimierte Logistik für zeitnahe Lieferung Ihrer Stahlaufträge"
+        }
+      }
+    },
+    "features": {
+      "title": "Plattform-Funktionen",
+      "subtitle": "Alles, was Sie für Ihre Stahleinkäufe benötigen",
+      "items": {
+        "orderManagement": {
+          "title": "Auftragsverwaltung",
+          "description": "Platzieren und verwalten Sie Ihre Stahlaufträge einfach über unsere Plattform"
+        },
+        "supplierNetwork": {
+          "title": "Lieferantennetzwerk",
+          "description": "Zugang zu einem breiten Netzwerk zertifizierter internationaler Lieferanten"
+        },
+        "priceComparison": {
+          "title": "Preisvergleich",
+          "description": "Vergleichen Sie Preise und Bedingungen verschiedener Lieferanten"
+        },
+        "qualityAssurance": {
+          "title": "Qualitätssicherung",
+          "description": "Alle Lieferanten werden auf Qualität und Zertifizierungen geprüft"
+        }
+      }
+    },
+    "cta": {
+      "title": "Bereit zu sparen?",
+      "subtitle": "Starten Sie noch heute mit der Platzierung Ihres ersten Auftrags",
+      "register": "Registrieren",
+      "contact": "Kontakt aufnehmen"
+    }
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "orders": "Aufträge",

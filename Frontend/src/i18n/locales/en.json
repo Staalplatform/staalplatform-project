@@ -47,6 +47,69 @@
     "tooltip": "Tooltip",
     "info": "Information"
   },
+  "homepage": {
+    "hero": {
+      "title": "Steel Platform",
+      "subtitle": "The smart way to purchase steel",
+      "description": "Companies that purchase large quantities of steel often do so through their familiar channels. These are often not the best and cheapest channels, especially when a buyer orders from a Dutch supplier.",
+      "cta": "Start saving",
+      "learnMore": "Learn more"
+    },
+    "benefits": {
+      "title": "Why choose our platform?",
+      "subtitle": "Discover the benefits of the Steel Platform",
+      "items": {
+        "lowerPrice": {
+          "title": "Lower price",
+          "description": "Save significantly on your steel purchases through direct connections with international suppliers"
+        },
+        "knowhow": {
+          "title": "Import know-how",
+          "description": "Our expertise in international import ensures smooth transactions and compliance"
+        },
+        "certificates": {
+          "title": "Proper certificates",
+          "description": "All suppliers meet required certifications and quality standards"
+        },
+        "quality": {
+          "title": "Equivalent quality",
+          "description": "Steel of the same high quality as Dutch suppliers, but at better prices"
+        },
+        "delivery": {
+          "title": "Fast delivery",
+          "description": "Optimized logistics for timely delivery of your steel orders"
+        }
+      }
+    },
+    "features": {
+      "title": "Platform features",
+      "subtitle": "Everything you need for your steel purchases",
+      "items": {
+        "orderManagement": {
+          "title": "Order Management",
+          "description": "Place and manage your steel orders easily through our platform"
+        },
+        "supplierNetwork": {
+          "title": "Supplier Network",
+          "description": "Access to a broad network of certified international suppliers"
+        },
+        "priceComparison": {
+          "title": "Price Comparison",
+          "description": "Compare prices and conditions from different suppliers"
+        },
+        "qualityAssurance": {
+          "title": "Quality Assurance",
+          "description": "All suppliers are checked for quality and certifications"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to save?",
+      "subtitle": "Start placing your first order today",
+      "register": "Register",
+      "contact": "Contact us"
+    }
+  },
   "buttons": {
     "submitOrder": "Submit Order",
     "submitOrderTooltip": "Click here to submit your order. It will then be reviewed by our team.",

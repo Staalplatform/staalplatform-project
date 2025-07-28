@@ -47,6 +47,69 @@
     "tooltip": "Tooltip",
     "info": "Informatie"
   },
+  "homepage": {
+    "hero": {
+      "title": "Staalplatform",
+      "subtitle": "De slimme manier om staal in te kopen",
+      "description": "Bedrijven die grote hoeveelheden staal inkopen, doen dat vaak via hun bekende kanalen. Dit zijn vaak niet de beste en goedkoopste kanalen, en met name niet als een afnemer bij een Nederlandse leverancier bestelt.",
+      "cta": "Start met besparen",
+      "learnMore": "Meer informatie"
+    },
+    "benefits": {
+      "title": "Waarom kiezen voor ons platform?",
+      "subtitle": "Ontdek de voordelen van het Staalplatform",
+      "items": {
+        "lowerPrice": {
+          "title": "Lagere prijs",
+          "description": "Bespaar aanzienlijk op uw staal aankopen door directe connecties met internationale leveranciers"
+        },
+        "knowhow": {
+          "title": "Knowhow om te importeren",
+          "description": "Onze expertise in internationale import zorgt voor soepele transacties en compliance"
+        },
+        "certificates": {
+          "title": "Juiste certificaten",
+          "description": "Alle leveranciers voldoen aan de vereiste certificeringen en kwaliteitsstandaarden"
+        },
+        "quality": {
+          "title": "Gelijkwaardige kwaliteit",
+          "description": "Staal van dezelfde hoge kwaliteit als Nederlandse leveranciers, maar tegen betere prijzen"
+        },
+        "delivery": {
+          "title": "Snelle levering",
+          "description": "Geoptimaliseerde logistiek voor tijdige levering van uw staal orders"
+        }
+      }
+    },
+    "features": {
+      "title": "Platform functionaliteiten",
+      "subtitle": "Alles wat u nodig heeft voor uw staal aankopen",
+      "items": {
+        "orderManagement": {
+          "title": "Opdrachtbeheer",
+          "description": "Plaats en beheer uw staal opdrachten eenvoudig via ons platform"
+        },
+        "supplierNetwork": {
+          "title": "Leveranciersnetwerk",
+          "description": "Toegang tot een breed netwerk van gecertificeerde internationale leveranciers"
+        },
+        "priceComparison": {
+          "title": "Prijsvergelijking",
+          "description": "Vergelijk prijzen en voorwaarden van verschillende leveranciers"
+        },
+        "qualityAssurance": {
+          "title": "Kwaliteitsborging",
+          "description": "Alle leveranciers worden gecontroleerd op kwaliteit en certificeringen"
+        }
+      }
+    },
+    "cta": {
+      "title": "Klaar om te besparen?",
+      "subtitle": "Start vandaag nog met het plaatsen van uw eerste opdracht",
+      "register": "Registreren",
+      "contact": "Contact opnemen"
+    }
+  },
   "buttons": {
     "submitOrder": "Opdracht Plaatsen",
     "submitOrderTooltip": "Klik hier om uw opdracht te plaatsen. Deze wordt vervolgens beoordeeld door ons team.",
