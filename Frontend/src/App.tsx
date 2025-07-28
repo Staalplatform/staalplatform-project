@@ -7,14 +7,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg padding-8">
+      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 margin-bottom-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">
             Staalplatform
           </h1>
           
           <div className="space-y-4">
-            <div className="bg-blue-50 padding-4 rounded-lg">
+            <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-blue-800">
                 Count: <span className="font-bold">{count}</span>
               </p>

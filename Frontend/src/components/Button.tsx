@@ -22,9 +22,9 @@ const Button: React.FC<ButtonProps> = ({
     outline: 'btn-outline',
   };
   const sizeClasses: Record<string, string> = {
-    sm: 'padding-x-3 padding-y-1.5 text-sm',
-    md: 'padding-x-4 padding-y-2',
-    lg: 'padding-x-6 padding-y-3 text-lg',
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2',
+    lg: 'px-6 py-3 text-lg',
   };
 
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
