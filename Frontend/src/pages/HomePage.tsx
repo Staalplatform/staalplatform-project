@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import Button from '../components/Button'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 
 const HomePage = () => {
@@ -87,12 +86,12 @@ const HomePage = () => {
               {t('homepage.hero.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="primary" size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white text-blue-600 hover:bg-gray-100 focus:ring-blue-500 shadow-sm">
                 {t('homepage.hero.cta')}
-              </Button>
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
+              </button>
+              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-white text-white hover:bg-white hover:text-blue-600 focus:ring-white">
                 {t('homepage.hero.learnMore')}
-              </Button>
+              </button>
             </div>
           </div>
         </div>
@@ -169,12 +168,12 @@ const HomePage = () => {
               {t('homepage.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="primary" size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-white text-blue-600 hover:bg-gray-100 focus:ring-blue-500 shadow-sm">
                 {t('homepage.cta.register')}
-              </Button>
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
+              </button>
+              <button className="inline-flex items-center justify-center px-6 py-3 text-base rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-white text-white hover:bg-white hover:text-blue-600 focus:ring-white">
                 {t('homepage.cta.contact')}
-              </Button>
+              </button>
             </div>
           </div>
         </div>
