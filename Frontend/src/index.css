@@ -22,21 +22,43 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@layer components {
-  /* Custom button classes */
-  .btn {
-    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
-  }
-  
-  .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
-  }
-  
-  .btn-secondary {
-    @apply bg-secondary-500 text-white hover:bg-secondary-600 focus:ring-secondary-500;
-  }
-  
-  .btn-outline {
-    @apply border border-primary-600 text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
-  }
+/* Custom button classes */
+.btn {
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.btn:focus {
+  box-shadow: 0 0 0 2px var(--color-primary-500);
+}
+
+.btn-primary {
+  background-color: var(--color-primary-600);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-700);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary-500);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-600);
+}
+
+.btn-outline {
+  border: 1px solid var(--color-primary-600);
+  color: var(--color-primary-600);
+  background-color: transparent;
+}
+
+.btn-outline:hover {
+  background-color: var(--color-primary-50);
 }
