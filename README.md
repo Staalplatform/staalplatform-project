@@ -11,7 +11,7 @@ Een moderne web applicatie gebouwd met React, Express, en Supabase.
 - **TailwindCSS 4.1.11** - Utility-first CSS framework
 - **Lucide React 0.526.0** - Icon library
 - **PostCSS + Autoprefixer** - CSS processing
-- **TypeScript** - Type safety
+- **JavaScript** - Eenvoudige setup
 
 ### Backend
 - **Node.js + Express 5.1.0** - Server framework
@@ -30,10 +30,10 @@ Staalplatform/
 │   │   ├── pages/         # Page componenten
 │   │   ├── hooks/         # Custom React hooks
 │   │   ├── utils/         # Utility functies
-│   │   ├── App.tsx        # Hoofdcomponent
+│   │   ├── App.jsx        # Hoofdcomponent
 │   │   └── index.css      # Global styles + Tailwind
 │   ├── package.json
-│   ├── vite.config.ts
+│   ├── vite.config.js
 │   ├── tailwind.config.js
 │   ├── postcss.config.js
 │   └── eslint.config.js
@@ -103,7 +103,7 @@ npm run dev
 ## 🛠️ Development Tools
 
 - **ESLint 9.30.1** - Code linting
-- **TypeScript** types voor React
+- **JavaScript** voor eenvoudige development
 - **Vite plugins** (React, SVGR)
 - **Hot reload** en development server
 
