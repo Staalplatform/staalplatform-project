@@ -45,49 +45,42 @@ function NieuweTransactie() {
     )
   }
 
-  // Menu items voor de 7 statussen
+  // Menu items voor de 7 statussen met status icoontjes
   const menuItems = [
     {
       id: 'order-aanmaken',
       label: 'Order aanmaken',
-      icon: FileText,
-      color: 'text-blue-600'
+      status: 1 // Groen vinkje
     },
     {
       id: 'samenvatting-order',
       label: 'Samenvatting order en verzenden',
-      icon: FileText,
-      color: 'text-blue-600'
+      status: 1 // Groen vinkje
     },
     {
       id: 'order-geopend',
       label: 'Order geopend door leverancier',
-      icon: FileText,
-      color: 'text-blue-600'
+      status: 1 // Groen vinkje
     },
     {
       id: 'voorstel-leverancier',
       label: 'Voorstel leverancier',
-      icon: FileText,
-      color: 'text-blue-600'
+      status: 1 // Groen vinkje
     },
     {
       id: 'order-definitief',
       label: 'Order definitief maken en verzenden',
-      icon: FileText,
-      color: 'text-blue-600'
+      status: 2 // Oranje pending
     },
     {
       id: 'definitief-voorstel',
       label: 'Definitief voorstel',
-      icon: FileText,
-      color: 'text-blue-600'
+      status: 0 // Rood kruisje
     },
     {
       id: 'overeenkomst-sluiten',
       label: 'Overeenkomst sluiten',
-      icon: FileText,
-      color: 'text-blue-600'
+      status: 0 // Rood kruisje
     }
   ]
 
@@ -211,7 +204,6 @@ function NieuweTransactie() {
             {/* Menu items */}
             <nav className="flex-1 p-4 space-y-2">
               {menuItems.map((item) => {
-                const Icon = item.icon
                 return (
                   <button
                     key={item.id}
@@ -224,18 +216,16 @@ function NieuweTransactie() {
                       }
                     `}
                   >
-                    <Icon size={20} className={activeMenuItem === item.id ? 'text-blue-600' : item.color} />
+                    {item.status === 0 && <XCircle size={20} className="text-red-500" />}
+                    {item.status === 1 && <CheckCircle2 size={20} className="text-green-500" />}
+                    {item.status === 2 && <Clock size={20} className="text-orange-500" />}
                     <span className="font-medium">{item.label}</span>
                   </button>
                 )
               })}
             </nav>
 
-            {/* Status overzicht */}
-            <div className="p-4 border-t border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Status Overzicht</h3>
-              <StatusIcons statusArray={dummyTransaction.status} />
-            </div>
+
           </div>
         </aside>
 
