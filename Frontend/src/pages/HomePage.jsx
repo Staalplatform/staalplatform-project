@@ -15,7 +15,10 @@ function HomePage() {
               <h1 className="text-2xl font-bold text-gray-900">Staalplatform</h1>
             </div>
             <div className="flex space-x-4">
-              <button className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium transition-colors">
+              <button 
+                onClick={() => navigate('/login')}
+                className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium transition-colors"
+              >
                 Login
               </button>
               <button 

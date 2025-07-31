@@ -220,4 +220,76 @@ router.get('/verify/:token', async (req, res) => {
   }
 });
 
+// Login endpoint
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body
+
+    // Validatie
+    if (!email || !password) {
+      return res.status(400).json({
+        error: 'Email en wachtwoord zijn verplicht'
+      })
+    }
+
+    // Email validatie
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        error: 'Ongeldig emailadres'
+      })
+    }
+
+    // Zoek gebruiker in database
+    const { data: user, error: findError } = await getSupabase()
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single()
+
+    if (findError || !user) {
+      return res.status(401).json({
+        error: 'Ongeldige email of wachtwoord'
+      })
+    }
+
+    // Controleer of account actief is
+    if (!user.is_active) {
+      return res.status(401).json({
+        error: 'Account is gedeactiveerd'
+      })
+    }
+
+    // Verifieer wachtwoord
+    const bcrypt = await import('bcryptjs')
+    const isValidPassword = await bcrypt.compare(password, user.password_hash)
+
+    if (!isValidPassword) {
+      return res.status(401).json({
+        error: 'Ongeldige email of wachtwoord'
+      })
+    }
+
+    // Succesvolle login
+    res.json({
+      message: 'Succesvol ingelogd',
+      user: {
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        company_name: user.company_name,
+        user_type: user.user_type,
+        user_role: user.user_role,
+        email_verified: user.email_verified
+      }
+    })
+
+  } catch (error) {
+    console.error('Login error:', error)
+    res.status(500).json({
+      error: 'Interne server fout'
+    })
+  }
+})
+
 export default router; 
