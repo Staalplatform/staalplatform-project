@@ -1,13 +1,8 @@
 import express from 'express';
-import { createClient } from '@supabase/supabase-js';
 import { hashPassword, isValidEmail, isValidPhone, isValidPostalCode } from '../utils/auth.js';
+import getSupabase from '../utils/supabase.js';
 
 const router = express.Router();
-
-// Initialize Supabase
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // Registratie endpoint
 router.post('/register', async (req, res) => {
@@ -71,7 +66,7 @@ router.post('/register', async (req, res) => {
     }
 
     // Check of email al bestaat
-    const { data: existingUser, error: checkError } = await supabase
+    const { data: existingUser, error: checkError } = await getSupabase()
       .from('users')
       .select('email')
       .eq('email', email)
@@ -93,7 +88,7 @@ router.post('/register', async (req, res) => {
     const password_hash = await hashPassword(password);
 
     // Gebruiker aanmaken in Supabase
-    const { data: newUser, error: insertError } = await supabase
+    const { data: newUser, error: insertError } = await getSupabase()
       .from('users')
       .insert([
         {
