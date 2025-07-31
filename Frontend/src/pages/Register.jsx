@@ -2,14 +2,15 @@ import { useState } from 'react'
 
 function Register() {
   const [formData, setFormData] = useState({
-    companyName: '',
+    user_type: 'buyer', // Default: Afnemer
+    company_name: '',
     street: '',
-    houseNumber: '',
+    house_number: '',
     addition: '',
-    postalCode: '',
+    postal_code: '',
     city: '',
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     phone: '',
     email: '',
     password: '',
@@ -47,6 +48,35 @@ function Register() {
         {/* Form */}
         <div className="bg-white rounded-xl shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* User Type Selectie */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Type Gebruiker</h3>
+              <div className="flex items-center space-x-6">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="user_type"
+                    value="buyer"
+                    checked={formData.user_type === 'buyer'}
+                    onChange={handleChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">Afnemer</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="user_type"
+                    value="supplier"
+                    checked={formData.user_type === 'supplier'}
+                    onChange={handleChange}
+                    className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">Leverancier</span>
+                </label>
+              </div>
+            </div>
+
             {/* Bedrijfsgegevens */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Bedrijfsgegevens</h3>
@@ -57,8 +87,8 @@ function Register() {
                 </label>
                 <input
                   type="text"
-                  name="companyName"
-                  value={formData.companyName}
+                  name="company_name"
+                  value={formData.company_name}
                   onChange={handleChange}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -85,8 +115,8 @@ function Register() {
                   </label>
                   <input
                     type="text"
-                    name="houseNumber"
-                    value={formData.houseNumber}
+                    name="house_number"
+                    value={formData.house_number}
                     onChange={handleChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -113,8 +143,8 @@ function Register() {
                   </label>
                   <input
                     type="text"
-                    name="postalCode"
-                    value={formData.postalCode}
+                    name="postal_code"
+                    value={formData.postal_code}
                     onChange={handleChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -147,8 +177,8 @@ function Register() {
                   </label>
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="first_name"
+                    value={formData.first_name}
                     onChange={handleChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -160,8 +190,8 @@ function Register() {
                   </label>
                   <input
                     type="text"
-                    name="lastName"
-                    value={formData.lastName}
+                    name="last_name"
+                    value={formData.last_name}
                     onChange={handleChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
