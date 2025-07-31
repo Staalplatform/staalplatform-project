@@ -92,7 +92,7 @@ export const sendVerificationEmail = async (resend, userData, verificationToken)
             </p>
             
             <div style="text-align: center; margin: 30px 0;">
-              <a href="http://localhost:5173/verify?token=${verificationToken}" 
+              <a href="http://localhost:5173/verify/${verificationToken}" 
                  style="background-color: #1e40af; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                 Email Verifiëren
               </a>
@@ -100,8 +100,8 @@ export const sendVerificationEmail = async (resend, userData, verificationToken)
             
             <p style="color: #6b7280; font-size: 14px;">
               Als de knop niet werkt, kopieer dan deze link naar je browser:<br>
-              <a href="http://localhost:5173/verify?token=${verificationToken}" style="color: #1e40af;">
-                http://localhost:5173/verify?token=${verificationToken}
+              <a href="http://localhost:5173/verify/${verificationToken}" style="color: #1e40af;">
+                http://localhost:5173/verify/${verificationToken}
               </a>
             </p>
           </div>

@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Register() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     user_type: 'buyer', // Default: Afnemer
     company_name: '',
@@ -49,23 +51,16 @@ function Register() {
         throw new Error(data.error || 'Er is een fout opgetreden')
       }
 
-      setSuccess('Account succesvol aangemaakt! U kunt nu inloggen.')
-      // Reset form
-      setFormData({
-        user_type: 'buyer',
-        company_name: '',
-        street: '',
-        house_number: '',
-        addition: '',
-        postal_code: '',
-        city: '',
-        first_name: '',
-        last_name: '',
-        phone: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      })
+      // Account succesvol aangemaakt - doorsturen naar juiste portaal
+      const userType = data.user.user_type
+      const portalPath = userType === 'buyer' ? '/afnemersportaal' : '/leverancierportaal'
+      
+      setSuccess(`Account succesvol aangemaakt! U wordt doorgestuurd naar het ${userType === 'buyer' ? 'afnemers' : 'leveranciers'}portaal... Controleer uw email voor verificatie.`)
+      
+      // Na 3 seconden doorsturen naar het juiste portaal
+      setTimeout(() => {
+        navigate(portalPath)
+      }, 3000)
 
     } catch (err) {
       setError(err.message)

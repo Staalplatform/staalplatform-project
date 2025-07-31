@@ -1,7 +1,8 @@
 import express from 'express';
 import { hashPassword, isValidEmail, isValidPhone, isValidPostalCode } from '../utils/auth.js';
 import getSupabase from '../config/database.js';
-import { sendWelcomeEmail } from '../utils/email.js';
+import { sendWelcomeEmail, sendVerificationEmail } from '../utils/email.js';
+import crypto from 'crypto';
 
 const router = express.Router();
 
@@ -88,6 +89,9 @@ router.post('/register', async (req, res) => {
     // Wachtwoord hashen
     const password_hash = await hashPassword(password);
 
+    // Verificatie token genereren
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+
     // Gebruiker aanmaken in Supabase
     const { data: newUser, error: insertError } = await getSupabase()
       .from('users')
@@ -107,7 +111,8 @@ router.post('/register', async (req, res) => {
           password_hash,
           user_role: 'user',
           is_active: true,
-          email_verified: false
+          email_verified: false,
+          verification_token: verificationToken
         }
       ])
       .select()
@@ -120,16 +125,25 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Welkomst email versturen (niet-blocking)
+    // Welkomst email en verificatie email versturen (niet-blocking)
     try {
+      // Welkomst email
       await sendWelcomeEmail(req.app.locals.resend, {
         email: newUser.email,
         first_name: newUser.first_name,
         company_name: newUser.company_name,
         user_type: newUser.user_type
       });
+
+      // Verificatie email
+      await sendVerificationEmail(req.app.locals.resend, {
+        email: newUser.email,
+        first_name: newUser.first_name,
+        company_name: newUser.company_name,
+        user_type: newUser.user_type
+      }, verificationToken);
     } catch (emailError) {
-      console.error('📧 Welcome email failed:', emailError);
+      console.error('📧 Email sending failed:', emailError);
       // Email fout mag de registratie niet stoppen
     }
 
@@ -148,6 +162,58 @@ router.post('/register', async (req, res) => {
 
   } catch (error) {
     console.error('Registration error:', error);
+    res.status(500).json({
+      error: 'Interne server fout'
+    });
+  }
+});
+
+// Email verificatie endpoint
+router.get('/verify/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    // Zoek gebruiker met deze verificatie token
+    const { data: user, error: findError } = await getSupabase()
+      .from('users')
+      .select('id, email, email_verified')
+      .eq('verification_token', token)
+      .single();
+
+    if (findError || !user) {
+      return res.status(400).json({
+        error: 'Ongeldige of verlopen verificatie link'
+      });
+    }
+
+    if (user.email_verified) {
+      return res.status(400).json({
+        error: 'Email is al geverifieerd'
+      });
+    }
+
+    // Markeer email als geverifieerd en verwijder token
+    const { error: updateError } = await getSupabase()
+      .from('users')
+      .update({
+        email_verified: true,
+        verification_token: null
+      })
+      .eq('id', user.id);
+
+    if (updateError) {
+      console.error('Verification update error:', updateError);
+      return res.status(500).json({
+        error: 'Fout bij verifiëren van email'
+      });
+    }
+
+    res.json({
+      message: 'Email succesvol geverifieerd! U kunt nu inloggen.'
+    });
+
+  } catch (error) {
+    console.error('Verification error:', error);
     res.status(500).json({
       error: 'Interne server fout'
     });
