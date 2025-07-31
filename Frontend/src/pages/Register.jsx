@@ -24,10 +24,54 @@ function Register() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    // Hier komt later de API call
+    setIsLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Er is een fout opgetreden')
+      }
+
+      setSuccess('Account succesvol aangemaakt! U kunt nu inloggen.')
+      // Reset form
+      setFormData({
+        user_type: 'buyer',
+        company_name: '',
+        street: '',
+        house_number: '',
+        addition: '',
+        postal_code: '',
+        city: '',
+        first_name: '',
+        last_name: '',
+        phone: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      })
+
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -47,6 +91,18 @@ function Register() {
 
         {/* Form */}
         <div className="bg-white rounded-xl shadow-lg p-8">
+          {/* Error/Success Messages */}
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+          )}
+          {success && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-600 text-sm">{success}</p>
+            </div>
+          )}
+          
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* User Type Selectie */}
             <div>
@@ -267,9 +323,10 @@ function Register() {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                disabled={isLoading}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-400 disabled:cursor-not-allowed"
               >
-                Aanmelden
+                {isLoading ? 'Bezig met aanmelden...' : 'Aanmelden'}
               </button>
             </div>
           </form>

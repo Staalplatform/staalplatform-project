@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import authRoutes from './routes/auth.js';
 
 // Load environment variables
 dotenv.config();
@@ -29,6 +30,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Staalplatform Backend is running' });
 });
+
+// API Routes
+app.use('/api/auth', authRoutes);
 
 // Example API endpoint
 app.get('/api/test', (req, res) => {
