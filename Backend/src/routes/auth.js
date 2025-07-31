@@ -3,6 +3,7 @@ import { hashPassword, isValidEmail, isValidPhone, isValidPostalCode } from '../
 import getSupabase from '../config/database.js';
 import { sendWelcomeEmail, sendVerificationEmail } from '../utils/email.js';
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 
 const router = express.Router();
 
@@ -260,7 +261,6 @@ router.post('/login', async (req, res) => {
     }
 
     // Verifieer wachtwoord
-    const bcrypt = await import('bcryptjs')
     const isValidPassword = await bcrypt.compare(password, user.password_hash)
 
     if (!isValidPassword) {
