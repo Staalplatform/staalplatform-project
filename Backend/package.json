@@ -2,11 +2,11 @@
   "name": "staalplatform-backend",
   "version": "1.0.0",
   "description": "Backend voor Staalplatform",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

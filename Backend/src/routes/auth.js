@@ -1,6 +1,7 @@
 import express from 'express';
 import { hashPassword, isValidEmail, isValidPhone, isValidPostalCode } from '../utils/auth.js';
-import getSupabase from '../utils/supabase.js';
+import getSupabase from '../config/database.js';
+import { sendWelcomeEmail } from '../utils/email.js';
 
 const router = express.Router();
 
@@ -117,6 +118,19 @@ router.post('/register', async (req, res) => {
       return res.status(500).json({
         error: 'Fout bij aanmaken van account'
       });
+    }
+
+    // Welkomst email versturen (niet-blocking)
+    try {
+      await sendWelcomeEmail(req.app.locals.resend, {
+        email: newUser.email,
+        first_name: newUser.first_name,
+        company_name: newUser.company_name,
+        user_type: newUser.user_type
+      });
+    } catch (emailError) {
+      console.error('📧 Welcome email failed:', emailError);
+      // Email fout mag de registratie niet stoppen
     }
 
     // Succesvolle registratie

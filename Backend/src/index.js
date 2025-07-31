@@ -34,8 +34,14 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend for email functionality
+let resend = null;
+if (process.env.RESEND_API_KEY) {
+  resend = new Resend(process.env.RESEND_API_KEY);
+  console.log('📧 Resend email service: ✅ Enabled');
+} else {
+  console.log('📧 Resend email service: ⚠️ Disabled (no API key)');
+}
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -45,10 +51,10 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 
-// Example API endpoint
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'Backend API is working!' });
-});
+// Make resend available to routes
+app.locals.resend = resend;
+
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
