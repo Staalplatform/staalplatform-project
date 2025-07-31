@@ -10,17 +10,23 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "express": "^5.1.0",
     "@supabase/supabase-js": "^2.49.4",
-    "resend": "^4.5.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "bcryptjs": "^2.4.3"
+    "express": "^5.1.0",
+    "express-fileupload": "^1.5.2",
+    "resend": "^4.5.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"
   },
-  "keywords": ["express", "supabase", "openai", "resend"],
+  "keywords": [
+    "express",
+    "supabase",
+    "openai",
+    "resend"
+  ],
   "author": "",
   "license": "ISC"
-} 
+}

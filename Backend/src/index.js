@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Resend } from 'resend';
+import fileUpload from 'express-fileupload';
 import authRoutes from './routes/auth.js';
+import ordersRoutes from './routes/orders.js';
 
 // Load environment variables
 dotenv.config();
@@ -37,6 +39,11 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+app.use(fileUpload({
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  abortOnLimit: true,
+  createParentPath: true
+}));
 
 // Initialize Resend for email functionality
 let resend = null;
@@ -54,6 +61,7 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/orders', ordersRoutes);
 
 // Make resend available to routes
 app.locals.resend = resend;

@@ -1,12 +1,33 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { ArrowLeft, FileText, CheckCircle2, XCircle, Clock } from 'lucide-react'
+import { ArrowLeft, FileText, CheckCircle2, XCircle, Clock, Upload, X } from 'lucide-react'
 
 function NieuweTransactie() {
   const navigate = useNavigate()
   const { user, loading } = useAuth()
   const [activeMenuItem, setActiveMenuItem] = useState('order-aanmaken')
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    dossiernummer: '',
+    gewenste_leverdatum: '',
+    contactpersoon: `${user?.first_name || ''} ${user?.last_name || ''}`.trim(),
+    telefoonnummer: user?.phone || ''
+  })
+  
+  // File upload state
+  const [files, setFiles] = useState({
+    tekeningen: [],
+    '3d_bestanden': [],
+    stuklijsten: [],
+    conservering: []
+  })
+  
+  const [uploading, setUploading] = useState(false)
+  const [orderId, setOrderId] = useState(null)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   // Status workflow stappen
   const statusSteps = [
@@ -90,6 +111,19 @@ function NieuweTransactie() {
         return (
           <div className="p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Order aanmaken</h2>
+            
+            {/* Error/Success Messages */}
+            {error && (
+              <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm">{error}</p>
+              </div>
+            )}
+            {success && (
+              <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-green-600 text-sm">{success}</p>
+              </div>
+            )}
+            
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               {/* Basis informatie */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -99,6 +133,9 @@ function NieuweTransactie() {
                   </label>
                   <input
                     type="text"
+                    name="dossiernummer"
+                    value={formData.dossiernummer}
+                    onChange={handleInputChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Voer dossiernummer in"
@@ -111,6 +148,9 @@ function NieuweTransactie() {
                   </label>
                   <input
                     type="date"
+                    name="gewenste_leverdatum"
+                    value={formData.gewenste_leverdatum}
+                    onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
@@ -121,9 +161,10 @@ function NieuweTransactie() {
                   </label>
                   <input
                     type="text"
-                    defaultValue={`${user?.first_name || ''} ${user?.last_name || ''}`}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
-                    readOnly
+                    name="contactpersoon"
+                    value={formData.contactpersoon}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 
@@ -133,9 +174,10 @@ function NieuweTransactie() {
                   </label>
                   <input
                     type="tel"
-                    defaultValue={user?.phone || ''}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
-                    readOnly
+                    name="telefoonnummer"
+                    value={formData.telefoonnummer}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -146,14 +188,44 @@ function NieuweTransactie() {
                 <div className="border border-gray-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Tekeningen</h3>
                   <p className="text-sm text-gray-600 mb-4">Upload hier de tekeningen</p>
+                  
+                  {/* File list */}
+                  {files.tekeningen.length > 0 && (
+                    <div className="mb-4 space-y-2">
+                      {files.tekeningen.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                          <span className="text-sm text-gray-700">{file.name}</span>
+                          <button
+                            onClick={() => removeFile('tekeningen', index)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                     <div className="text-gray-400 mb-2">
-                      <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <Upload className="mx-auto h-12 w-12" />
                     </div>
-                    <p className="text-sm text-gray-600">Klik om bestanden te selecteren of sleep ze hierheen</p>
-                    <input type="file" multiple className="hidden" />
+                    <p className="text-sm text-gray-600 mb-2">Klik om bestanden te selecteren of sleep ze hierheen</p>
+                    <p className="text-xs text-gray-500">Alleen JPEG, JPG en PNG bestanden tot 10MB</p>
+                    <input 
+                      type="file" 
+                      multiple 
+                      accept=".jpg,.jpeg,.png"
+                      onChange={(e) => handleFileSelect('tekeningen', e.target.files)}
+                      className="hidden"
+                      id="tekeningen-upload"
+                    />
+                    <label 
+                      htmlFor="tekeningen-upload"
+                      className="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+                    >
+                      Bestanden selecteren
+                    </label>
                   </div>
                 </div>
 
@@ -161,14 +233,44 @@ function NieuweTransactie() {
                 <div className="border border-gray-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">3D-bestanden</h3>
                   <p className="text-sm text-gray-600 mb-4">Upload hier de 3D-bestanden</p>
+                  
+                  {/* File list */}
+                  {files['3d_bestanden'].length > 0 && (
+                    <div className="mb-4 space-y-2">
+                      {files['3d_bestanden'].map((file, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                          <span className="text-sm text-gray-700">{file.name}</span>
+                          <button
+                            onClick={() => removeFile('3d_bestanden', index)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                     <div className="text-gray-400 mb-2">
-                      <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <Upload className="mx-auto h-12 w-12" />
                     </div>
-                    <p className="text-sm text-gray-600">Klik om bestanden te selecteren of sleep ze hierheen</p>
-                    <input type="file" multiple className="hidden" />
+                    <p className="text-sm text-gray-600 mb-2">Klik om bestanden te selecteren of sleep ze hierheen</p>
+                    <p className="text-xs text-gray-500">Alleen JPEG, JPG en PNG bestanden tot 10MB</p>
+                    <input 
+                      type="file" 
+                      multiple 
+                      accept=".jpg,.jpeg,.png"
+                      onChange={(e) => handleFileSelect('3d_bestanden', e.target.files)}
+                      className="hidden"
+                      id="3d-bestanden-upload"
+                    />
+                    <label 
+                      htmlFor="3d-bestanden-upload"
+                      className="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+                    >
+                      Bestanden selecteren
+                    </label>
                   </div>
                 </div>
 
@@ -176,14 +278,44 @@ function NieuweTransactie() {
                 <div className="border border-gray-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Stuklijsten</h3>
                   <p className="text-sm text-gray-600 mb-4">Upload hier de stuklijsten</p>
+                  
+                  {/* File list */}
+                  {files.stuklijsten.length > 0 && (
+                    <div className="mb-4 space-y-2">
+                      {files.stuklijsten.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                          <span className="text-sm text-gray-700">{file.name}</span>
+                          <button
+                            onClick={() => removeFile('stuklijsten', index)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                     <div className="text-gray-400 mb-2">
-                      <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <Upload className="mx-auto h-12 w-12" />
                     </div>
-                    <p className="text-sm text-gray-600">Klik om bestanden te selecteren of sleep ze hierheen</p>
-                    <input type="file" multiple className="hidden" />
+                    <p className="text-sm text-gray-600 mb-2">Klik om bestanden te selecteren of sleep ze hierheen</p>
+                    <p className="text-xs text-gray-500">Alleen JPEG, JPG en PNG bestanden tot 10MB</p>
+                    <input 
+                      type="file" 
+                      multiple 
+                      accept=".jpg,.jpeg,.png"
+                      onChange={(e) => handleFileSelect('stuklijsten', e.target.files)}
+                      className="hidden"
+                      id="stuklijsten-upload"
+                    />
+                    <label 
+                      htmlFor="stuklijsten-upload"
+                      className="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+                    >
+                      Bestanden selecteren
+                    </label>
                   </div>
                 </div>
 
@@ -191,14 +323,44 @@ function NieuweTransactie() {
                 <div className="border border-gray-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Conservering specificaties</h3>
                   <p className="text-sm text-gray-600 mb-4">Upload hier de Conservering specificaties</p>
+                  
+                  {/* File list */}
+                  {files.conservering.length > 0 && (
+                    <div className="mb-4 space-y-2">
+                      {files.conservering.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                          <span className="text-sm text-gray-700">{file.name}</span>
+                          <button
+                            onClick={() => removeFile('conservering', index)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                     <div className="text-gray-400 mb-2">
-                      <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <Upload className="mx-auto h-12 w-12" />
                     </div>
-                    <p className="text-sm text-gray-600">Klik om bestanden te selecteren of sleep ze hierheen</p>
-                    <input type="file" multiple className="hidden" />
+                    <p className="text-sm text-gray-600 mb-2">Klik om bestanden te selecteren of sleep ze hierheen</p>
+                    <p className="text-xs text-gray-500">Alleen JPEG, JPG en PNG bestanden tot 10MB</p>
+                    <input 
+                      type="file" 
+                      multiple 
+                      accept=".jpg,.jpeg,.png"
+                      onChange={(e) => handleFileSelect('conservering', e.target.files)}
+                      className="hidden"
+                      id="conservering-upload"
+                    />
+                    <label 
+                      htmlFor="conservering-upload"
+                      className="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+                    >
+                      Bestanden selecteren
+                    </label>
                   </div>
                 </div>
 
@@ -206,7 +368,12 @@ function NieuweTransactie() {
                 <div className="border border-gray-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Certificering behoefte</h3>
                   <p className="text-sm text-gray-600 mb-4">Selecteer hieronder de certificering behoefte</p>
-                  <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <select 
+                    name="certificering_behoefte"
+                    value={formData.certificering_behoefte}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
                     <option value="">Selecteer certificering</option>
                     <option value="iso9001">ISO 9001</option>
                     <option value="iso14001">ISO 14001</option>
@@ -217,6 +384,24 @@ function NieuweTransactie() {
                     <option value="geen">Geen certificering nodig</option>
                   </select>
                 </div>
+              </div>
+
+              {/* Submit button */}
+              <div className="mt-8 flex justify-end">
+                <button
+                  onClick={createOrder}
+                  disabled={uploading || !formData.dossiernummer}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center space-x-2"
+                >
+                  {uploading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Bezig met opslaan...</span>
+                    </>
+                  ) : (
+                    <span>Order aanmaken</span>
+                  )}
+                </button>
               </div>
             </div>
           </div>
@@ -284,6 +469,125 @@ function NieuweTransactie() {
             </div>
           </div>
         )
+    }
+  }
+
+  // Form handlers
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleFileSelect = (fileType, selectedFiles) => {
+    const validFiles = Array.from(selectedFiles).filter(file => {
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png']
+      const maxSize = 10 * 1024 * 1024 // 10MB
+      
+      if (!validTypes.includes(file.type)) {
+        setError(`Bestand ${file.name} is geen geldig bestandstype. Alleen JPEG, JPG en PNG zijn toegestaan.`)
+        return false
+      }
+      
+      if (file.size > maxSize) {
+        setError(`Bestand ${file.name} is te groot. Maximum grootte is 10MB.`)
+        return false
+      }
+      
+      return true
+    })
+    
+    setFiles(prev => ({
+      ...prev,
+      [fileType]: [...prev[fileType], ...validFiles]
+    }))
+    setError('')
+  }
+
+  const removeFile = (fileType, index) => {
+    setFiles(prev => ({
+      ...prev,
+      [fileType]: prev[fileType].filter((_, i) => i !== index)
+    }))
+  }
+
+  const createOrder = async () => {
+    try {
+      setUploading(true)
+      setError('')
+      
+      const response = await fetch('http://localhost:3001/api/orders/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.id}`
+        },
+        body: JSON.stringify({
+          dossiernummer: formData.dossiernummer,
+          gewenste_leverdatum: formData.gewenste_leverdatum || null,
+          contactpersoon: formData.contactpersoon,
+          telefoonnummer: formData.telefoonnummer || null,
+          certificering_behoefte: formData.certificering_behoefte || null
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Fout bij aanmaken van order')
+      }
+
+      setOrderId(data.order.id)
+      setSuccess('Order succesvol aangemaakt! Bestanden kunnen nu worden geüpload.')
+      
+      // Automatisch bestanden uploaden als er bestanden zijn geselecteerd
+      await uploadAllFiles(data.order.id)
+      
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const uploadAllFiles = async (orderId) => {
+    const allFiles = Object.entries(files).flatMap(([fileType, fileList]) =>
+      fileList.map(file => ({ file, fileType }))
+    )
+
+    if (allFiles.length === 0) return
+
+    setUploading(true)
+    
+    for (const { file, fileType } of allFiles) {
+      try {
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('fileType', fileType)
+
+        const response = await fetch(`http://localhost:3001/api/orders/${orderId}/upload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${user.id}`
+          },
+          body: formData
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(`Fout bij uploaden van ${file.name}: ${errorData.error}`)
+        }
+      } catch (err) {
+        setError(err.message)
+        break
+      }
+    }
+    
+    setUploading(false)
+    if (!error) {
+      setSuccess('Alle bestanden succesvol geüpload!')
+      setFiles({ tekeningen: [], '3d_bestanden': [], stuklijsten: [], conservering: [] })
     }
   }
 
