@@ -59,7 +59,7 @@ function Register() {
       
       // Na 3 seconden doorsturen naar het juiste portaal
       setTimeout(() => {
-        navigate(portalPath)
+        window.location.href = portalPath
       }, 3000)
 
     } catch (err) {
