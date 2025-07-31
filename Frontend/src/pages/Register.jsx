@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Register() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     user_type: 'buyer', // Default: Afnemer
     company_name: '',
@@ -51,9 +53,19 @@ function Register() {
         throw new Error(data.error || 'Er is een fout opgetreden')
       }
 
-      // Account succesvol aangemaakt - doorsturen naar juiste portaal
+      // Account succesvol aangemaakt - automatisch inloggen en doorsturen
       const userType = data.user.user_type
       const portalPath = userType === 'buyer' ? '/afnemersportaal' : '/leverancierportaal'
+      
+      // Automatisch inloggen
+      login({
+        id: data.user.id,
+        email: data.user.email,
+        first_name: data.user.first_name,
+        last_name: data.user.last_name,
+        company_name: data.user.company_name,
+        user_type: data.user.user_type
+      })
       
       setSuccess(`Account succesvol aangemaakt! U wordt doorgestuurd naar het ${userType === 'buyer' ? 'afnemers' : 'leveranciers'}portaal... Controleer uw email voor verificatie.`)
       

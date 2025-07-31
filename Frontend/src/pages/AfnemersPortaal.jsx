@@ -1,9 +1,57 @@
-import { useState } from 'react'
-import { Menu, X, FileText, CheckCircle, Settings, Users, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { Menu, X, FileText, CheckCircle, Settings, Users, ChevronLeft, ChevronRight, XCircle, Clock, CheckCircle2 } from 'lucide-react'
 
 function AfnemersPortaal() {
+  const navigate = useNavigate()
+  const { user, logout, loading } = useAuth()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [activeMenuItem, setActiveMenuItem] = useState('openstaande-transacties')
+
+  // Status workflow stappen
+  const statusSteps = [
+    'Order aangemaakt',
+    'Order verzonden',
+    'Order geopend door leverancier',
+    'Voorstel leverancier ontvangen',
+    'Definitieve order verzonden',
+    'Definitief voorstel ontvangen',
+    'Voorstel akkoord'
+  ]
+
+  // Dummy transactie data
+  const dummyTransaction = {
+    dossiernummer: 'Dossier89229',
+    klantNaam: 'Steelmatics B.V.',
+    datumIngediend: '31 juli 2025',
+    laatsteWijziging: '05 augustus 2025',
+    soortWijziging: 'Voorstel leverancier ontvangen',
+    status: [1, 1, 1, 1, 2, 0, 0] // 0 = rood, 1 = groen, 2 = oranje
+  }
+
+  // Status icoontjes component
+  const StatusIcons = ({ statusArray }) => {
+    return (
+      <div className="flex flex-col space-y-1">
+        {statusArray.map((status, index) => (
+          <div key={index} className="flex items-center space-x-2">
+            {status === 0 && <XCircle size={14} className="text-red-500" />}
+            {status === 1 && <CheckCircle2 size={14} className="text-green-500" />}
+            {status === 2 && <Clock size={14} className="text-orange-500" />}
+            <span className="text-xs text-gray-600">{statusSteps[index]}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Redirect als gebruiker niet is ingelogd of verkeerd type
+  useEffect(() => {
+    if (!loading && (!user || user.user_type !== 'buyer')) {
+      navigate('/')
+    }
+  }, [user, loading, navigate])
 
   const menuItems = [
     {
@@ -36,25 +84,82 @@ function AfnemersPortaal() {
     setIsSidebarOpen(!isSidebarOpen)
   }
 
+  // Transactie tabel component
+  const TransactionTable = ({ transactions, title }) => {
+    return (
+      <div className="p-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">{title}</h2>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Dossiernummer
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Naam klant
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Datum ingediend
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Laatste wijziging
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Soort wijziging
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {transactions.map((transaction, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {transaction.dossiernummer}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {transaction.klantNaam}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {transaction.datumIngediend}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {transaction.laatsteWijziging}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {transaction.soortWijziging}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <StatusIcons statusArray={transaction.status} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const renderContent = () => {
     switch (activeMenuItem) {
       case 'openstaande-transacties':
         return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Openstaande transacties</h2>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <p className="text-gray-600">Hier komen je openstaande transacties te staan.</p>
-            </div>
-          </div>
+          <TransactionTable 
+            transactions={[dummyTransaction]} 
+            title="Openstaande transacties" 
+          />
         )
       case 'afgehandelde-transacties':
         return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Afgehandelde transacties</h2>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <p className="text-gray-600">Hier komen je afgehandelde transacties te staan.</p>
-            </div>
-          </div>
+          <TransactionTable 
+            transactions={[]} 
+            title="Afgehandelde transacties" 
+          />
         )
       case 'accountinstellingen':
         return (
@@ -100,8 +205,11 @@ function AfnemersPortaal() {
               <h1 className="text-2xl font-bold text-gray-900">Afnemersportaal</h1>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welkom, [Gebruikersnaam]</span>
-              <button className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors">
+              <span className="text-sm text-gray-600">Welkom, {user?.first_name || 'Gebruiker'}</span>
+              <button 
+                onClick={logout}
+                className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              >
                 Uitloggen
               </button>
             </div>

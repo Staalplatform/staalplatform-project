@@ -9,7 +9,7 @@ export const sendWelcomeEmail = async (resend, userData) => {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Staalplatform <noreply@staalplatform.nl>',
+      from: 'Staalplatform <onboarding@resend.dev>',
       to: [userData.email],
       subject: 'Welkom bij Staalplatform!',
       html: `
@@ -74,7 +74,7 @@ export const sendVerificationEmail = async (resend, userData, verificationToken)
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Staalplatform <noreply@staalplatform.nl>',
+      from: 'Staalplatform <onboarding@resend.dev>',
       to: [userData.email],
       subject: 'Verificeer je emailadres - Staalplatform',
       html: `

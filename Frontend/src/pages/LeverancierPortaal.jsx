@@ -1,9 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { Menu, X, FileText, CheckCircle, Settings, Users, ChevronLeft, ChevronRight } from 'lucide-react'
 
 function LeverancierPortaal() {
+  const navigate = useNavigate()
+  const { user, logout, loading } = useAuth()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [activeMenuItem, setActiveMenuItem] = useState('openstaande-transacties')
+
+  // Redirect als gebruiker niet is ingelogd of verkeerd type
+  useEffect(() => {
+    if (!loading && (!user || user.user_type !== 'supplier')) {
+      navigate('/')
+    }
+  }, [user, loading, navigate])
 
   const menuItems = [
     {
@@ -100,8 +111,11 @@ function LeverancierPortaal() {
               <h1 className="text-2xl font-bold text-gray-900">Leveranciersportaal</h1>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welkom, [Gebruikersnaam]</span>
-              <button className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors">
+              <span className="text-sm text-gray-600">Welkom, {user?.first_name || 'Gebruiker'}</span>
+              <button 
+                onClick={logout}
+                className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              >
                 Uitloggen
               </button>
             </div>

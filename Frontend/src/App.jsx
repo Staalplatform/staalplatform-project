@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
 import HomePage from './pages/HomePage'
 import Register from './pages/Register'
 import AfnemersPortaal from './pages/AfnemersPortaal'
@@ -8,15 +9,17 @@ import './App.css'
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/afnemersportaal" element={<AfnemersPortaal />} />
-        <Route path="/leverancierportaal" element={<LeverancierPortaal />} />
-        <Route path="/verify/:token" element={<EmailVerification />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/afnemersportaal" element={<AfnemersPortaal />} />
+          <Route path="/leverancierportaal" element={<LeverancierPortaal />} />
+          <Route path="/verify/:token" element={<EmailVerification />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   )
 }
 
