@@ -27,7 +27,11 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: [
+    'http://localhost:5173', 
+    'http://127.0.0.1:5173',
+    'https://staalplatform-project-1.onrender.com'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -72,5 +76,5 @@ app.listen(PORT, () => {
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🔐 Auth endpoint: http://localhost:${PORT}/api/auth/register`);
   console.log(`🌐 Frontend URL: http://localhost:5173`);
-  console.log(`✅ CORS enabled for: http://localhost:5173, http://127.0.0.1:5173`);
+  console.log(`✅ CORS enabled for: http://localhost:5173, http://127.0.0.1:5173, https://staalplatform-project-1.onrender.com`);
 }); 
