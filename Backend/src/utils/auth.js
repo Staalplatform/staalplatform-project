@@ -20,7 +20,7 @@ export const isValidEmail = (email) => {
 // Telefoonnummer validatie (Nederlandse formaten)
 export const isValidPhone = (phone) => {
   const phoneRegex = /^(\+31|0)[1-9][0-9]{8}$/;
-  return phoneRegex.test(phone.replace(/\s/g, ''));
+  return phoneRegex.test(phone.replace(/[\s\-]/g, ''));
 };
 
 // Postcode validatie (Nederlandse format)
