@@ -98,15 +98,10 @@ function Register() {
 
         {/* Form */}
         <div className="bg-white rounded-xl shadow-lg p-8">
-          {/* Error/Success Messages */}
+          {/* Error Message */}
           {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-red-600 text-sm">{error}</p>
-            </div>
-          )}
-          {success && (
-            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-green-600 text-sm">{success}</p>
             </div>
           )}
           
@@ -337,6 +332,13 @@ function Register() {
               </button>
             </div>
           </form>
+
+          {/* Success Message */}
+          {success && (
+            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-600 text-sm">{success}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

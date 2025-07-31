@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import AfnemersPortaal from './pages/AfnemersPortaal'
 import LeverancierPortaal from './pages/LeverancierPortaal'
 import EmailVerification from './pages/EmailVerification'
+import NieuweTransactie from './pages/NieuweTransactie'
 import './App.css'
 
 // 404 Not Found component
@@ -34,6 +35,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/afnemersportaal" element={<AfnemersPortaal />} />
           <Route path="/leverancierportaal" element={<LeverancierPortaal />} />
+          <Route path="/nieuwe-transactie" element={<NieuweTransactie />} />
           <Route path="/verify/:token" element={<EmailVerification />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
