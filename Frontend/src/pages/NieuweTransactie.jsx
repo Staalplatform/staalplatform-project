@@ -517,7 +517,7 @@ function NieuweTransactie() {
       setUploading(true)
       setError('')
       
-      const response = await fetch('http://localhost:3001/api/orders/create', {
+      const response = await fetch('https://staalplatform-project.onrender.com/api/orders/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -566,7 +566,7 @@ function NieuweTransactie() {
         formData.append('file', file)
         formData.append('fileType', fileType)
 
-        const response = await fetch(`http://localhost:3001/api/orders/${orderId}/upload`, {
+        const response = await fetch(`https://staalplatform-project.onrender.com/api/orders/${orderId}/upload`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${user.id}`

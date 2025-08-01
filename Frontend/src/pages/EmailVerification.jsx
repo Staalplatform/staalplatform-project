@@ -11,7 +11,7 @@ function EmailVerification() {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/auth/verify/${token}`, {
+        const response = await fetch(`https://staalplatform-project.onrender.com/api/auth/verify/${token}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

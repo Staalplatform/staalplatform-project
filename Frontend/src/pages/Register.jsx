@@ -39,7 +39,7 @@ function Register() {
     setSuccess('')
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/register', {
+      const response = await fetch('https://staalplatform-project.onrender.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
