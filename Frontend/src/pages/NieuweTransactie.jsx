@@ -24,10 +24,20 @@ function NieuweTransactie() {
     conservering: []
   })
   
+  // Uploaded files state (bestanden die al zijn opgeslagen)
+  const [uploadedFiles, setUploadedFiles] = useState({
+    tekeningen: [],
+    '3d_bestanden': [],
+    stuklijsten: [],
+    conservering: []
+  })
+  
   const [uploading, setUploading] = useState(false)
   const [orderId, setOrderId] = useState(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [fileToDelete, setFileToDelete] = useState(null)
 
   // Status workflow stappen
   const statusSteps = [
@@ -189,43 +199,98 @@ function NieuweTransactie() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Tekeningen</h3>
                   <p className="text-sm text-gray-600 mb-4">Upload hier de tekeningen</p>
                   
-                  {/* File list */}
-                  {files.tekeningen.length > 0 && (
-                    <div className="mb-4 space-y-2">
-                      {files.tekeningen.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <span className="text-sm text-gray-700">{file.name}</span>
+                  <div className="flex gap-6">
+                    {/* Links 1/3: Upload functionaliteit */}
+                    <div className="w-1/3">
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
+                        <div className="text-gray-400 mb-2">
+                          <Upload className="mx-auto h-8 w-8" />
+                        </div>
+                        <p className="text-xs text-gray-600 mb-2">Klik om bestanden te selecteren</p>
+                        <p className="text-xs text-gray-500">JPEG, JPG, PNG tot 10MB</p>
+                        <input 
+                          type="file" 
+                          multiple 
+                          accept=".jpg,.jpeg,.png"
+                          onChange={(e) => handleFileSelect('tekeningen', e.target.files)}
+                          className="hidden"
+                          id="tekeningen-upload"
+                        />
+                        <label 
+                          htmlFor="tekeningen-upload"
+                          className="mt-2 inline-block px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 cursor-pointer"
+                        >
+                          Selecteren
+                        </label>
+                      </div>
+                    </div>
+                    
+                    {/* Rechts 2/3: Bestandenlijst + opslaan knop */}
+                    <div className="w-2/3">
+                      {/* Lokale files (nog niet geüpload) */}
+                      {files.tekeningen.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">Nieuwe bestanden:</h4>
+                          <div className="space-y-2">
+                            {files.tekeningen.map((file, index) => (
+                              <div key={index} className="flex items-center justify-between p-2 bg-yellow-50 border border-yellow-200 rounded">
+                                <span className="text-sm text-gray-700">{file.name}</span>
+                                <button
+                                  onClick={() => removeFile('tekeningen', index)}
+                                  className="text-red-500 hover:text-red-700"
+                                >
+                                  <X size={16} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Geüploade files */}
+                      {uploadedFiles.tekeningen.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">Geüploade bestanden:</h4>
+                          <div className="space-y-2">
+                            {uploadedFiles.tekeningen.map((file, index) => (
+                              <div key={index} className="flex items-center justify-between p-2 bg-green-50 border border-green-200 rounded">
+                                <span className="text-sm text-gray-700">{file.name}</span>
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-xs text-green-600">✓ Geüpload</span>
+                                  <button
+                                    onClick={() => confirmDeleteFile('tekeningen', file.id, index, file.name)}
+                                    className="text-red-500 hover:text-red-700"
+                                    title="Bestand verwijderen"
+                                  >
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Opslaan knop */}
+                      {files.tekeningen.length > 0 && (
+                        <div className="flex justify-end">
                           <button
-                            onClick={() => removeFile('tekeningen', index)}
-                            className="text-red-500 hover:text-red-700"
+                            onClick={() => uploadFiles('tekeningen')}
+                            disabled={uploading}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm disabled:bg-green-400 disabled:cursor-not-allowed flex items-center space-x-2"
                           >
-                            <X size={16} />
+                            {uploading ? (
+                              <>
+                                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                <span>Opslaan...</span>
+                              </>
+                            ) : (
+                              <span>Bestanden opslaan</span>
+                            )}
                           </button>
                         </div>
-                      ))}
+                      )}
                     </div>
-                  )}
-                  
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
-                    <div className="text-gray-400 mb-2">
-                      <Upload className="mx-auto h-12 w-12" />
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2">Klik om bestanden te selecteren of sleep ze hierheen</p>
-                    <p className="text-xs text-gray-500">Alleen JPEG, JPG en PNG bestanden tot 10MB</p>
-                    <input 
-                      type="file" 
-                      multiple 
-                      accept=".jpg,.jpeg,.png"
-                      onChange={(e) => handleFileSelect('tekeningen', e.target.files)}
-                      className="hidden"
-                      id="tekeningen-upload"
-                    />
-                    <label 
-                      htmlFor="tekeningen-upload"
-                      className="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
-                    >
-                      Bestanden selecteren
-                    </label>
                   </div>
                 </div>
 
@@ -234,43 +299,71 @@ function NieuweTransactie() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">3D-bestanden</h3>
                   <p className="text-sm text-gray-600 mb-4">Upload hier de 3D-bestanden</p>
                   
-                  {/* File list */}
-                  {files['3d_bestanden'].length > 0 && (
-                    <div className="mb-4 space-y-2">
-                      {files['3d_bestanden'].map((file, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <span className="text-sm text-gray-700">{file.name}</span>
+                  <div className="flex gap-6">
+                    {/* Links 1/3: Upload functionaliteit */}
+                    <div className="w-1/3">
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
+                        <div className="text-gray-400 mb-2">
+                          <Upload className="mx-auto h-8 w-8" />
+                        </div>
+                        <p className="text-xs text-gray-600 mb-2">Klik om bestanden te selecteren</p>
+                        <p className="text-xs text-gray-500">JPEG, JPG, PNG tot 10MB</p>
+                        <input 
+                          type="file" 
+                          multiple 
+                          accept=".jpg,.jpeg,.png"
+                          onChange={(e) => handleFileSelect('3d_bestanden', e.target.files)}
+                          className="hidden"
+                          id="3d-bestanden-upload"
+                        />
+                        <label 
+                          htmlFor="3d-bestanden-upload"
+                          className="mt-2 inline-block px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 cursor-pointer"
+                        >
+                          Selecteren
+                        </label>
+                      </div>
+                    </div>
+                    
+                    {/* Rechts 2/3: Bestandenlijst + opslaan knop */}
+                    <div className="w-2/3">
+                      {/* File list */}
+                      {files['3d_bestanden'].length > 0 && (
+                        <div className="mb-4 space-y-2">
+                          {files['3d_bestanden'].map((file, index) => (
+                            <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                              <span className="text-sm text-gray-700">{file.name}</span>
+                              <button
+                                onClick={() => removeFile('3d_bestanden', index)}
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                <X size={16} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Opslaan knop */}
+                      {files['3d_bestanden'].length > 0 && (
+                        <div className="flex justify-end">
                           <button
-                            onClick={() => removeFile('3d_bestanden', index)}
-                            className="text-red-500 hover:text-red-700"
+                            onClick={() => uploadFiles('3d_bestanden')}
+                            disabled={uploading}
+                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm disabled:bg-green-400 disabled:cursor-not-allowed flex items-center space-x-2"
                           >
-                            <X size={16} />
+                            {uploading ? (
+                              <>
+                                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                <span>Opslaan...</span>
+                              </>
+                            ) : (
+                              <span>Bestanden opslaan</span>
+                            )}
                           </button>
                         </div>
-                      ))}
+                      )}
                     </div>
-                  )}
-                  
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
-                    <div className="text-gray-400 mb-2">
-                      <Upload className="mx-auto h-12 w-12" />
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2">Klik om bestanden te selecteren of sleep ze hierheen</p>
-                    <p className="text-xs text-gray-500">Alleen JPEG, JPG en PNG bestanden tot 10MB</p>
-                    <input 
-                      type="file" 
-                      multiple 
-                      accept=".jpg,.jpeg,.png"
-                      onChange={(e) => handleFileSelect('3d_bestanden', e.target.files)}
-                      className="hidden"
-                      id="3d-bestanden-upload"
-                    />
-                    <label 
-                      htmlFor="3d-bestanden-upload"
-                      className="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
-                    >
-                      Bestanden selecteren
-                    </label>
                   </div>
                 </div>
 
@@ -512,6 +605,42 @@ function NieuweTransactie() {
     }))
   }
 
+  const confirmDeleteFile = (fileType, fileId, index, fileName) => {
+    setFileToDelete({ fileType, fileId, index, fileName })
+    setShowDeleteConfirm(true)
+  }
+
+  const deleteUploadedFile = async () => {
+    if (!orderId || !fileToDelete) return
+
+    try {
+      const response = await fetch(`https://staalplatform-project.onrender.com/api/orders/${orderId}/files/${fileToDelete.fileId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.id}`
+        }
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Fout bij verwijderen van bestand')
+      }
+
+      // Verwijder uit uploadedFiles state
+      setUploadedFiles(prev => ({
+        ...prev,
+        [fileToDelete.fileType]: prev[fileToDelete.fileType].filter((_, i) => i !== fileToDelete.index)
+      }))
+
+      setSuccess('Bestand succesvol verwijderd!')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setShowDeleteConfirm(false)
+      setFileToDelete(null)
+    }
+  }
+
   const createOrder = async () => {
     try {
       setUploading(true)
@@ -543,6 +672,67 @@ function NieuweTransactie() {
       
       // Automatisch bestanden uploaden als er bestanden zijn geselecteerd
       await uploadAllFiles(data.order.id)
+      
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const uploadFiles = async (fileType) => {
+    if (!orderId) {
+      setError('Eerst moet de order worden aangemaakt')
+      return
+    }
+
+    const fileList = files[fileType]
+    if (fileList.length === 0) return
+
+    setUploading(true)
+    
+    try {
+      const uploadedFileRecords = []
+      
+      for (const file of fileList) {
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('fileType', fileType)
+
+        const response = await fetch(`https://staalplatform-project.onrender.com/api/orders/${orderId}/upload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${user.id}`
+          },
+          body: formData
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(`Fout bij uploaden van ${file.name}: ${errorData.error}`)
+        }
+
+        const data = await response.json()
+        uploadedFileRecords.push({
+          ...file,
+          id: data.file.id,
+          uploaded_at: data.file.uploaded_at
+        })
+      }
+      
+      // Bestanden succesvol geüpload - verplaats naar uploadedFiles met IDs
+      setUploadedFiles(prev => ({
+        ...prev,
+        [fileType]: [...prev[fileType], ...uploadedFileRecords]
+      }))
+      
+      // Verwijder uit lokale files state
+      setFiles(prev => ({
+        ...prev,
+        [fileType]: []
+      }))
+      
+      setSuccess(`${fileType} bestanden succesvol geüpload!`)
       
     } catch (err) {
       setError(err.message)
@@ -666,6 +856,40 @@ function NieuweTransactie() {
           </div>
         </main>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Bestand verwijderen
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Weet je zeker dat je <strong>{fileToDelete?.fileName}</strong> wilt verwijderen?
+            </p>
+            <p className="text-sm text-red-600 mb-6">
+              ⚠️ Dit bestand wordt ook verwijderd voor de leverancier en kan niet meer worden hersteld.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => {
+                  setShowDeleteConfirm(false)
+                  setFileToDelete(null)
+                }}
+                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Annuleren
+              </button>
+              <button
+                onClick={deleteUploadedFile}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Verwijderen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

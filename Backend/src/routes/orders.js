@@ -259,4 +259,63 @@ router.get('/:orderId', authenticateUser, async (req, res) => {
   }
 });
 
+// DELETE /:orderId/files/:fileId - Delete a specific file
+router.delete('/:orderId/files/:fileId', authenticateUser, requireBuyer, async (req, res) => {
+  try {
+    const { orderId, fileId } = req.params;
+    const userId = req.user?.id;
+
+    // Check if order exists and belongs to user
+    const { data: order, error: orderError } = await getSupabase()
+      .from('orders')
+      .select('id')
+      .eq('id', orderId)
+      .eq('user_id', userId)
+      .single();
+
+    if (orderError || !order) {
+      return res.status(404).json({ error: 'Order niet gevonden' });
+    }
+
+    // Get file info from database
+    const { data: file, error: fileError } = await getSupabase()
+      .from('order_files')
+      .select('*')
+      .eq('id', fileId)
+      .eq('order_id', orderId)
+      .single();
+
+    if (fileError || !file) {
+      return res.status(404).json({ error: 'Bestand niet gevonden' });
+    }
+
+    // Delete file from Supabase Storage
+    const { error: storageError } = await supabase.storage
+      .from('order-files')
+      .remove([file.file_path]);
+
+    if (storageError) {
+      console.error('Storage delete error:', storageError);
+      return res.status(500).json({ error: 'Fout bij verwijderen van bestand uit storage' });
+    }
+
+    // Delete file record from database
+    const { error: deleteError } = await getSupabase()
+      .from('order_files')
+      .delete()
+      .eq('id', fileId);
+
+    if (deleteError) {
+      console.error('Database delete error:', deleteError);
+      return res.status(500).json({ error: 'Fout bij verwijderen van bestand uit database' });
+    }
+
+    res.json({ message: 'Bestand succesvol verwijderd' });
+
+  } catch (error) {
+    console.error('Delete file error:', error);
+    res.status(500).json({ error: 'Interne server fout' });
+  }
+});
+
 export default router; 
