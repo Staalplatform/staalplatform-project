@@ -32,11 +32,15 @@ app.use(cors({
   origin: [
     'http://localhost:5173', 
     'http://127.0.0.1:5173',
-    'https://staalplatform-project-1.onrender.com'
+    'https://staalplatform-project-1.onrender.com',
+    'https://staalplatform-project-1.onrender.com/',
+    'https://staalplatform-project-1.onrender.com/*'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 app.use(express.json());
 app.use(fileUpload({
