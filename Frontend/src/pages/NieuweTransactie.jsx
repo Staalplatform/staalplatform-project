@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ArrowLeft, FileText, CheckCircle2, XCircle, Clock, Upload, X } from 'lucide-react'
@@ -38,6 +38,40 @@ function NieuweTransactie() {
   const [success, setSuccess] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [fileToDelete, setFileToDelete] = useState(null)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+
+  // Check voor niet-opgeslagen wijzigingen
+  const checkForUnsavedChanges = () => {
+    // Check of er bestanden zijn geselecteerd
+    const hasFiles = Object.values(files).some(fileList => fileList.length > 0)
+    
+    // Check of er formulier wijzigingen zijn (dossiernummer is verplicht)
+    const hasFormChanges = formData.dossiernummer.trim() !== ''
+    
+    return hasFiles || hasFormChanges
+  }
+
+  // Update hasUnsavedChanges wanneer er wijzigingen zijn
+  useEffect(() => {
+    setHasUnsavedChanges(checkForUnsavedChanges())
+  }, [files, formData])
+
+  // Beforeunload event listener voor waarschuwing bij verlaten pagina
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault()
+        e.returnValue = 'Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je de pagina wilt verlaten?'
+        return 'Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je de pagina wilt verlaten?'
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [hasUnsavedChanges])
 
   // Status workflow stappen
   const statusSteps = [
@@ -273,7 +307,7 @@ function NieuweTransactie() {
                       
                       {/* Opslaan knop */}
                       {files.tekeningen.length > 0 && (
-                        <div className="flex justify-end">
+                        <div className="flex justify-start">
                           <button
                             onClick={() => uploadFiles('tekeningen')}
                             disabled={uploading}
@@ -668,9 +702,9 @@ function NieuweTransactie() {
       }
 
       setOrderId(data.order.id)
-      setSuccess('Order succesvol aangemaakt! Bestanden kunnen nu worden geüpload.')
+      setSuccess('Order succesvol aangemaakt! Bestanden worden automatisch geüpload...')
       
-      // Automatisch bestanden uploaden als er bestanden zijn geselecteerd
+      // Automatisch alle bestanden uploaden (ook als niet per rij opgeslagen)
       await uploadAllFiles(data.order.id)
       
     } catch (err) {
@@ -742,16 +776,27 @@ function NieuweTransactie() {
   }
 
   const uploadAllFiles = async (orderId) => {
+    // Combineer alle bestanden (nieuwe + al geüploade)
     const allFiles = Object.entries(files).flatMap(([fileType, fileList]) =>
-      fileList.map(file => ({ file, fileType }))
+      fileList.map(file => ({ file, fileType, isNew: true }))
     )
 
-    if (allFiles.length === 0) return
+    // Voeg al geüploade bestanden toe (voor het geval er al bestanden zijn geüpload)
+    const allUploadedFiles = Object.entries(uploadedFiles).flatMap(([fileType, fileList]) =>
+      fileList.map(file => ({ file, fileType, isNew: false }))
+    )
+
+    const totalFiles = [...allFiles, ...allUploadedFiles]
+
+    if (totalFiles.length === 0) return
 
     setUploading(true)
     
-    for (const { file, fileType } of allFiles) {
+    for (const { file, fileType, isNew } of totalFiles) {
       try {
+        // Skip als bestand al geüpload is
+        if (!isNew) continue
+
         const formData = new FormData()
         formData.append('file', file)
         formData.append('fileType', fileType)
@@ -768,21 +813,45 @@ function NieuweTransactie() {
           const errorData = await response.json()
           throw new Error(`Fout bij uploaden van ${file.name}: ${errorData.error}`)
         }
+
+        // Verplaats naar uploadedFiles na succesvolle upload
+        setUploadedFiles(prev => ({
+          ...prev,
+          [fileType]: [...prev[fileType], { ...file, id: Date.now(), uploaded_at: new Date().toISOString() }]
+        }))
       } catch (err) {
         setError(err.message)
         break
       }
     }
     
+    // Verwijder alle nieuwe bestanden uit files state
+    setFiles({ tekeningen: [], '3d_bestanden': [], stuklijsten: [], conservering: [] })
+    
     setUploading(false)
     if (!error) {
       setSuccess('Alle bestanden succesvol geüpload!')
-      setFiles({ tekeningen: [], '3d_bestanden': [], stuklijsten: [], conservering: [] })
     }
   }
 
   const handleCancel = () => {
+    if (hasUnsavedChanges) {
+      const confirmed = window.confirm('Je hebt niet-opgeslagen wijzigingen. Weet je zeker dat je de pagina wilt verlaten?')
+      if (!confirmed) {
+        return
+      }
+    }
     navigate('/afnemersportaal')
+  }
+
+  const handleMenuItemClick = (menuItemId) => {
+    if (hasUnsavedChanges && activeMenuItem === 'order-aanmaken') {
+      const confirmed = window.confirm('Je hebt niet-opgeslagen wijzigingen op de "Order aanmaken" pagina. Weet je zeker dat je wilt doorgaan?')
+      if (!confirmed) {
+        return
+      }
+    }
+    setActiveMenuItem(menuItemId)
   }
 
   // Redirect als gebruiker niet is ingelogd of verkeerd type
@@ -827,7 +896,7 @@ function NieuweTransactie() {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveMenuItem(item.id)}
+                    onClick={() => handleMenuItemClick(item.id)}
                     className={`
                       w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200
                       ${activeMenuItem === item.id 
@@ -836,9 +905,11 @@ function NieuweTransactie() {
                       }
                     `}
                   >
-                    {item.status === 0 && <XCircle size={18} className="text-red-500" />}
-                    {item.status === 1 && <CheckCircle2 size={18} className="text-green-500" />}
-                    {item.status === 2 && <Clock size={18} className="text-orange-500" />}
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      {item.status === 0 && <XCircle size={18} className="text-red-500" />}
+                      {item.status === 1 && <CheckCircle2 size={18} className="text-green-500" />}
+                      {item.status === 2 && <Clock size={18} className="text-orange-500" />}
+                    </div>
                     <span className="font-medium">{item.label}</span>
                   </button>
                 )
